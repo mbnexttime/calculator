@@ -213,14 +213,14 @@ class CalculatorKeyboard : CalculatorInputComponent {
             CalculatorButton.ClearAllButton -> inputListener?.onClearAllClick()
             CalculatorButton.EraseButton -> inputListener?.onEraseClick()
             is CalculatorButton.DigitButton -> inputListener?.onDigitClick(Digit(button.digit))
-            CalculatorButton.AdditionButton -> inputListener?.onOperationClick(Operation.Addition)
-            CalculatorButton.SubtractButton -> inputListener?.onOperationClick(Operation.Subtract)
-            CalculatorButton.MultiplicationButton -> inputListener?.onOperationClick(Operation.Multiplication)
-            CalculatorButton.DivisionButton -> inputListener?.onOperationClick(Operation.Division)
-            CalculatorButton.PercentButton -> inputListener?.onOperationClick(Operation.Percent)
+            CalculatorButton.AdditionButton -> inputListener?.onOperationClick(Operation.Addition())
+            CalculatorButton.SubtractButton -> inputListener?.onOperationClick(Operation.Subtract())
+            CalculatorButton.MultiplicationButton -> inputListener?.onOperationClick(Operation.Multiplication())
+            CalculatorButton.DivisionButton -> inputListener?.onOperationClick(Operation.Division())
+            CalculatorButton.PercentButton -> inputListener?.onOperationClick(Operation.Percent())
             CalculatorButton.CommaButton -> inputListener?.onCommaClick()
             CalculatorButton.EvalButton -> inputListener?.onEvaluateClick()
-            CalculatorButton.SquareRootButton -> inputListener?.onOperationClick(Operation.SquareRoot)
+            CalculatorButton.SquareRootButton -> inputListener?.onOperationClick(Operation.SquareRoot())
         }
     }
 }
