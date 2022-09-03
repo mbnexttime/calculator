@@ -6,7 +6,8 @@ import androidx.compose.runtime.Composable
 
 interface CalculatorInputComponent {
     
-    fun createContent(context: Context): Composable
+    @Composable
+    fun CalculatorInput()
     
     fun addListener(listener: CalculatorInputListener)
     

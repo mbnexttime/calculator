@@ -10,6 +10,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.calculator.input.api.CalculatorInputComponent
+import com.calculator.input.api.CalculatorInputListener
 import com.calculator.ui.theme.CalculatorTheme
 
 class MainActivity : ComponentActivity() {
