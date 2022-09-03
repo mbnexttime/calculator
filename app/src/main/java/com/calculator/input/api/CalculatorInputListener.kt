@@ -13,4 +13,10 @@ interface CalculatorInputListener {
     fun onDigitClick(digit: Digit)
 
     fun onEraseClick()
+
+    fun onClearAllClick()
+
+    fun onCommaClick()
+
+    fun onEvaluateClick()
 }

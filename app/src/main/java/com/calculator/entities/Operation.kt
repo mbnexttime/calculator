@@ -1,8 +1,10 @@
 package com.calculator.entities
 
 sealed interface Operation: EvaluationToken {
-    class Addition: Operation
-    class Multiplication: Operation
-    class Division: Operation
-    class Subtract: Operation
+    object Addition: Operation
+    object Multiplication: Operation
+    object Division: Operation
+    object Subtract: Operation
+    object Percent: Operation
+    object SquareRoot: Operation
 }
