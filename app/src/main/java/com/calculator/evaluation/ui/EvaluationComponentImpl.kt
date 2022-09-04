@@ -84,8 +84,6 @@ class EvaluationComponentImpl(
             itemsState.value = listOf(EmptyField)
         }
 
-        override fun onCommaClick() = Unit
-
         override fun onEvaluateClick() = Unit
     }
 

@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.calculator.R
 import com.calculator.entities.Operation
+import com.calculator.entities.Parentheses
 import com.calculator.input.api.CalculatorInputComponent
 import com.calculator.input.api.CalculatorInputListener
 import com.calculator.util.Digit
@@ -34,14 +35,13 @@ class CalculatorKeyboard : CalculatorInputComponent {
         data class DigitButton(val digit: Char) : CalculatorButton
         object ClearAllButton : CalculatorButton
         object EraseButton : CalculatorButton
-        object SquareRootButton : CalculatorButton
         object DivisionButton : CalculatorButton
         object MultiplicationButton : CalculatorButton
         object AdditionButton : CalculatorButton
         object SubtractButton : CalculatorButton
-        object CommaButton : CalculatorButton
-        object PercentButton : CalculatorButton
         object EvalButton : CalculatorButton
+        object ForwardParenthesesButton : CalculatorButton
+        object BackParenthesesButton : CalculatorButton
     }
 
     val digitsColor = Color(18, 10, 143)
@@ -51,22 +51,21 @@ class CalculatorKeyboard : CalculatorInputComponent {
     override fun CalculatorInput() {
         val buttonsParams = listOf(
             KeyBoardButtonParams(
-                R.drawable.ic_icons8_c_96,
-                24.dp,
-                Color.Black,
-                CalculatorButton.ClearAllButton
-            ),
-            KeyBoardButtonParams(
                 R.drawable.ic_icons8_clear_symbol_100,
                 32.dp,
                 Color.Black,
                 CalculatorButton.EraseButton
             ),
             KeyBoardButtonParams(
-                R.drawable.ic_icons8_square_root_90,
+                R.drawable.ic_left_p,
                 32.dp,
                 Color.Black,
-                CalculatorButton.SquareRootButton
+                CalculatorButton.ForwardParenthesesButton
+            ), KeyBoardButtonParams(
+                R.drawable.ic_right_p,
+                32.dp,
+                Color.Black,
+                CalculatorButton.BackParenthesesButton
             ),
             KeyBoardButtonParams(
                 R.drawable.ic_icons8_divide_100,
@@ -147,10 +146,10 @@ class CalculatorKeyboard : CalculatorInputComponent {
                 CalculatorButton.AdditionButton
             ),
             KeyBoardButtonParams(
-                R.drawable.ic_icons8_percentage_100,
-                32.dp,
+                R.drawable.ic_icons8_c_96,
+                24.dp,
                 Color.Black,
-                CalculatorButton.PercentButton
+                CalculatorButton.ClearAllButton
             ),
             KeyBoardButtonParams(
                 R.drawable.ic_icons8_circled_0_100,
@@ -158,12 +157,7 @@ class CalculatorKeyboard : CalculatorInputComponent {
                 digitsColor,
                 CalculatorButton.DigitButton('0')
             ),
-            KeyBoardButtonParams(
-                R.drawable.ic_icons8_comma_96,
-                24.dp,
-                Color.Black,
-                CalculatorButton.CommaButton
-            ),
+            null,
             KeyBoardButtonParams(
                 R.drawable.ic_icons8_equal_sign_100,
                 32.dp,
@@ -177,7 +171,7 @@ class CalculatorKeyboard : CalculatorInputComponent {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(buttonsParams) { params ->
-                KeyBoardButton(params)
+                params?.let { KeyBoardButton(it) }
             }
         }
     }
@@ -217,10 +211,13 @@ class CalculatorKeyboard : CalculatorInputComponent {
             CalculatorButton.SubtractButton -> inputListener?.onOperationClick(Operation.Subtract())
             CalculatorButton.MultiplicationButton -> inputListener?.onOperationClick(Operation.Multiplication())
             CalculatorButton.DivisionButton -> inputListener?.onOperationClick(Operation.Division())
-            CalculatorButton.PercentButton -> inputListener?.onOperationClick(Operation.Percent())
-            CalculatorButton.CommaButton -> inputListener?.onCommaClick()
             CalculatorButton.EvalButton -> inputListener?.onEvaluateClick()
-            CalculatorButton.SquareRootButton -> inputListener?.onOperationClick(Operation.SquareRoot())
+            CalculatorButton.ForwardParenthesesButton -> inputListener?.onParenthesesClick(
+                Parentheses.Forward
+            )
+            CalculatorButton.BackParenthesesButton -> inputListener?.onParenthesesClick(
+                Parentheses.Back
+            )
         }
     }
 }
