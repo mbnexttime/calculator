@@ -1,6 +1,6 @@
 package com.calculator.entities
 
 sealed interface Parentheses: EvaluationToken {
-    object Back: Parentheses
-    object Forward: Parentheses
+    class Back : Parentheses
+    class Forward : Parentheses
 }

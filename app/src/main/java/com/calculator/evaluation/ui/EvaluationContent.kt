@@ -11,13 +11,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.selection.DisableSelection
-import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -26,12 +23,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalTextInputService
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.TextUnit
@@ -47,7 +41,7 @@ import com.calculator.entities.Parentheses
 @Composable
 fun EvaluationContent(
     itemsState: MutableState<List<ListItem>>,
-    onValueChanged: (value: TextFieldValue, item: ListItem) -> Unit,
+    onClick: (position: Int, item: ListItem) -> Unit,
 ) {
     val items by remember {
         itemsState
@@ -70,120 +64,65 @@ fun EvaluationContent(
                     handleColor = Color.Transparent,
                     backgroundColor = Color.Transparent,
                 )
-                CompositionLocalProvider(
-                    LocalTextInputService provides null,
-                    LocalTextSelectionColors provides customTextSelectionColors,
-                ) {
-                    DisableSelection {
-                        LocalFocusManager.current.clearFocus(force = true)
-                        val modifier = Modifier
-                            .width(IntrinsicSize.Min)
-                            .height(IntrinsicSize.Min)
-                            .padding(start = 2.dp, end = 2.dp)
-                        val textStyle = TextStyle(
-                            fontSize = TextUnit(20.0f, TextUnitType.Sp),
-                            textAlign = TextAlign.Center,
-                        )
-                        when (item) {
-                            is Numeric -> BasicTextField(
-                                textStyle = textStyle,
-                                modifier = modifier,
-                                value = TextFieldValue(item.value),
-                                onValueChange = { onValueChanged.invoke(it, item) },
-                                cursorBrush = Brush.linearGradient(
-                                    colors = listOf(
-                                        Color.Transparent,
-                                        Color.Transparent
-                                    )
-                                )
-                            )
-                            is Operation.Addition -> BasicTextField(
-                                textStyle = textStyle,
-                                modifier = modifier,
-                                value = TextFieldValue("+"),
-                                onValueChange = { onValueChanged.invoke(it, item) },
-                                cursorBrush = Brush.linearGradient(
-                                    colors = listOf(
-                                        Color.Transparent,
-                                        Color.Transparent
-                                    )
-                                )
-                            )
-                            is Operation.Division -> BasicTextField(
-                                textStyle = textStyle,
-                                modifier = modifier,
-                                value = TextFieldValue("/"),
-                                onValueChange = { onValueChanged.invoke(it, item) },
-                                cursorBrush = Brush.linearGradient(
-                                    colors = listOf(
-                                        Color.Transparent,
-                                        Color.Transparent
-                                    )
-                                )
-                            )
-                            is Operation.Multiplication -> BasicTextField(
-                                textStyle = textStyle,
-                                modifier = modifier,
-                                value = TextFieldValue("*"),
-                                onValueChange = { onValueChanged.invoke(it, item) },
-                                cursorBrush = Brush.linearGradient(
-                                    colors = listOf(
-                                        Color.Transparent,
-                                        Color.Transparent
-                                    )
-                                )
-                            )
-                            is Operation.Subtract -> BasicTextField(
-                                textStyle = textStyle,
-                                modifier = modifier,
-                                value = TextFieldValue("-"),
-                                onValueChange = { onValueChanged.invoke(it, item) },
-                                cursorBrush = Brush.linearGradient(
-                                    colors = listOf(
-                                        Color.Transparent,
-                                        Color.Transparent
-                                    )
-                                )
-                            )
-                            is Parentheses.Back -> BasicTextField(
-                                textStyle = textStyle,
-                                modifier = modifier,
-                                value = TextFieldValue(")"),
-                                onValueChange = { onValueChanged.invoke(it, item) },
-                                cursorBrush = Brush.linearGradient(
-                                    colors = listOf(
-                                        Color.Transparent,
-                                        Color.Transparent
-                                    )
-                                )
-                            )
-                            is Parentheses.Forward -> BasicTextField(
-                                textStyle = textStyle,
-                                modifier = modifier,
-                                value = TextFieldValue("("),
-                                onValueChange = { onValueChanged.invoke(it, item) },
-                                cursorBrush = Brush.linearGradient(
-                                    colors = listOf(
-                                        Color.Transparent,
-                                        Color.Transparent
-                                    )
-                                )
-                            )
-                            is EmptyField -> BasicTextField(
-                                textStyle = textStyle.copy(color = Color.Red),
-                                modifier = modifier,
-                                value = TextFieldValue("_"),
-                                onValueChange = { onValueChanged.invoke(it, item) },
-                                cursorBrush = Brush.linearGradient(
-                                    colors = listOf(
-                                        Color.Transparent,
-                                        Color.Transparent
-                                    )
-                                )
-                            )
-                            else -> throw RuntimeException()
-                        }
-                    }
+
+                val modifier = Modifier
+                    .width(IntrinsicSize.Min)
+                    .height(IntrinsicSize.Min)
+                    .padding(start = 2.dp, end = 2.dp)
+                val textStyle = TextStyle(
+                    fontSize = TextUnit(20.0f, TextUnitType.Sp),
+                    textAlign = TextAlign.Center,
+                )
+                when (item) {
+                    is Numeric -> ClickableText(
+                        style = textStyle,
+                        modifier = modifier,
+                        text = AnnotatedString(item.value),
+                        onClick = { onClick.invoke(it, item) },
+                    )
+                    is Operation.Addition -> ClickableText(
+                        style = textStyle,
+                        modifier = modifier,
+                        text = AnnotatedString("+"),
+                        onClick = { onClick.invoke(it, item) },
+                    )
+                    is Operation.Division -> ClickableText(
+                        style = textStyle,
+                        modifier = modifier,
+                        text = AnnotatedString("/"),
+                        onClick = { onClick.invoke(it, item) },
+                    )
+                    is Operation.Multiplication -> ClickableText(
+                        style = textStyle,
+                        modifier = modifier,
+                        text = AnnotatedString("*"),
+                        onClick = { onClick.invoke(it, item) },
+                    )
+                    is Operation.Subtract -> ClickableText(
+                        style = textStyle,
+                        modifier = modifier,
+                        text = AnnotatedString("-"),
+                        onClick = { onClick.invoke(it, item) },
+                    )
+                    is Parentheses.Back -> ClickableText(
+                        style = textStyle,
+                        modifier = modifier,
+                        text = AnnotatedString(")"),
+                        onClick = { onClick.invoke(it, item) },
+                    )
+                    is Parentheses.Forward -> ClickableText(
+                        style = textStyle,
+                        modifier = modifier,
+                        text = AnnotatedString("("),
+                        onClick = { onClick.invoke(it, item) },
+                    )
+                    is EmptyField -> ClickableText(
+                        style = textStyle.copy(color = Color.Red),
+                        modifier = modifier,
+                        text = AnnotatedString("_"),
+                        onClick = { onClick.invoke(it, item) },
+                    )
+                    else -> throw RuntimeException()
                 }
             }
         },

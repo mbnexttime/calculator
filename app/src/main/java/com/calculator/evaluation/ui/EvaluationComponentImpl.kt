@@ -30,7 +30,15 @@ class EvaluationComponentImpl(
             itemsState.value = processItems(newList, SelectionData(operation, 1))
         }
 
-        override fun onParenthesesClick(parentheses: Parentheses) = Unit
+        override fun onParenthesesClick(parentheses: Parentheses) {
+            val index = getCurrentIndex()
+            if (index < 0) {
+                return
+            }
+            val newList = itemsState.value.toMutableList()
+            newList.add(index, parentheses)
+            itemsState.value = processItems(newList, SelectionData(parentheses, 1))
+        }
 
         override fun onDigitClick(digit: Digit) {
             val index = getCurrentIndex()
@@ -95,9 +103,9 @@ class EvaluationComponentImpl(
     override fun EvaluationContent() {
         EvaluationContent(
             itemsState = itemsState,
-            onValueChanged = { value, item ->
+            onClick = { position, item ->
                 if (itemsState.value.contains(item)) {
-                    itemsState.value = processItems(itemsState.value, SelectionData(item, value.selection.start))
+                    itemsState.value = processItems(itemsState.value, SelectionData(item, position))
                 }
             }
         )

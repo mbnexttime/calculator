@@ -213,10 +213,10 @@ class CalculatorKeyboard : CalculatorInputComponent {
             CalculatorButton.DivisionButton -> inputListener?.onOperationClick(Operation.Division())
             CalculatorButton.EvalButton -> inputListener?.onEvaluateClick()
             CalculatorButton.ForwardParenthesesButton -> inputListener?.onParenthesesClick(
-                Parentheses.Forward
+                Parentheses.Forward()
             )
             CalculatorButton.BackParenthesesButton -> inputListener?.onParenthesesClick(
-                Parentheses.Back
+                Parentheses.Back()
             )
         }
     }
