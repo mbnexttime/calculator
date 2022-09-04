@@ -1,3 +1,3 @@
 package com.calculator.entities
 
-sealed interface EvaluationToken
+sealed interface EvaluationToken : ListItem
