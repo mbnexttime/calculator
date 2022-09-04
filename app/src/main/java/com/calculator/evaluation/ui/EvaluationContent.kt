@@ -30,7 +30,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalTextInputService
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
@@ -43,20 +42,15 @@ import com.calculator.entities.ListItem
 import com.calculator.entities.Numeric
 import com.calculator.entities.Operation
 import com.calculator.entities.Parentheses
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalUnitApi::class)
 @Composable
 fun EvaluationContent(
     itemsState: MutableState<List<ListItem>>,
-    selectionState: MutableState<SelectionData>,
     onValueChanged: (value: TextFieldValue, item: ListItem) -> Unit,
 ) {
     val items by remember {
         itemsState
-    }
-    val selectionData by remember {
-        selectionState
     }
     val state = rememberLazyListState()
     val scope = rememberCoroutineScope()
@@ -90,13 +84,11 @@ fun EvaluationContent(
                             fontSize = TextUnit(20.0f, TextUnitType.Sp),
                             textAlign = TextAlign.Center,
                         )
-                        val selection =
-                            if (item === selectionData.listItem) TextRange(selectionData.position) else TextRange(0, 1)
                         when (item) {
                             is Numeric -> BasicTextField(
                                 textStyle = textStyle,
                                 modifier = modifier,
-                                value = TextFieldValue(item.value, selection = selection),
+                                value = TextFieldValue(item.value),
                                 onValueChange = { onValueChanged.invoke(it, item) },
                                 cursorBrush = Brush.linearGradient(
                                     colors = listOf(
@@ -108,7 +100,7 @@ fun EvaluationContent(
                             is Operation.Addition -> BasicTextField(
                                 textStyle = textStyle,
                                 modifier = modifier,
-                                value = TextFieldValue("+", selection = selection),
+                                value = TextFieldValue("+"),
                                 onValueChange = { onValueChanged.invoke(it, item) },
                                 cursorBrush = Brush.linearGradient(
                                     colors = listOf(
@@ -120,7 +112,7 @@ fun EvaluationContent(
                             is Operation.Division -> BasicTextField(
                                 textStyle = textStyle,
                                 modifier = modifier,
-                                value = TextFieldValue("/", selection = selection),
+                                value = TextFieldValue("/"),
                                 onValueChange = { onValueChanged.invoke(it, item) },
                                 cursorBrush = Brush.linearGradient(
                                     colors = listOf(
@@ -132,7 +124,7 @@ fun EvaluationContent(
                             is Operation.Multiplication -> BasicTextField(
                                 textStyle = textStyle,
                                 modifier = modifier,
-                                value = TextFieldValue("*", selection = selection),
+                                value = TextFieldValue("*"),
                                 onValueChange = { onValueChanged.invoke(it, item) },
                                 cursorBrush = Brush.linearGradient(
                                     colors = listOf(
@@ -144,7 +136,7 @@ fun EvaluationContent(
                             is Operation.Subtract -> BasicTextField(
                                 textStyle = textStyle,
                                 modifier = modifier,
-                                value = TextFieldValue("-", selection = selection),
+                                value = TextFieldValue("-"),
                                 onValueChange = { onValueChanged.invoke(it, item) },
                                 cursorBrush = Brush.linearGradient(
                                     colors = listOf(
@@ -156,7 +148,7 @@ fun EvaluationContent(
                             is Parentheses.Back -> BasicTextField(
                                 textStyle = textStyle,
                                 modifier = modifier,
-                                value = TextFieldValue(")", selection = selection),
+                                value = TextFieldValue(")"),
                                 onValueChange = { onValueChanged.invoke(it, item) },
                                 cursorBrush = Brush.linearGradient(
                                     colors = listOf(
@@ -168,7 +160,7 @@ fun EvaluationContent(
                             is Parentheses.Forward -> BasicTextField(
                                 textStyle = textStyle,
                                 modifier = modifier,
-                                value = TextFieldValue("(", selection = selection),
+                                value = TextFieldValue("("),
                                 onValueChange = { onValueChanged.invoke(it, item) },
                                 cursorBrush = Brush.linearGradient(
                                     colors = listOf(
@@ -180,7 +172,7 @@ fun EvaluationContent(
                             is EmptyField -> BasicTextField(
                                 textStyle = textStyle.copy(color = Color.Red),
                                 modifier = modifier,
-                                value = TextFieldValue("_", selection = selection),
+                                value = TextFieldValue("_"),
                                 onValueChange = { onValueChanged.invoke(it, item) },
                                 cursorBrush = Brush.linearGradient(
                                     colors = listOf(
@@ -193,9 +185,6 @@ fun EvaluationContent(
                         }
                     }
                 }
-            }
-            scope.launch {
-                state.animateScrollToItem(items.indexOf(selectionData.listItem))
             }
         },
     )
