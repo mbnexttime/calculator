@@ -67,7 +67,7 @@ class EvaluationComponentImpl(
                     /**
                      * Слева стоит число, с которого удаляем цифру
                      */
-                    val newNumber = prev.value.substring(1)
+                    val newNumber = prev.value.substring(0 until prev.value.lastIndex)
                     if (newNumber.isEmpty()) {
                         newList.removeAt(index - 1)
                     } else {
